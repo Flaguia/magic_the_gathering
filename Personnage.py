@@ -1,3 +1,4 @@
+from _typeshed import Self
 from Modules import places, Job, Outil
 from random import choice
 
@@ -18,8 +19,6 @@ class Personnage:
 		namePlace, objPlace = choice(list(places.items())) # Récupère un lieu random
 		self._place = {namePlace, objPlace} # Sauvegarde ce lieu sous forme de dictoinaire
 		
-
-    
 
 	def ajouter_inventaire(self, objet):
 		
@@ -47,11 +46,9 @@ class Personnage:
 					
 		else: print("Ustensille non présent")
 
-
-    def work(self):
-        self.jobs[self._place.job].work(self.outils[self._place.outil], self._place)
-        ressourcesCollected=self.addRessources()
-        print(ressourcesCollected)
+	def work(self):
+		self.jobs[self._place.job].work(self.outils[self._place.outil], self._place)
+		#TODO ajouter les ressources collectées
 
 tess = Personnage("tess",[], 100, 15, 40, 400, 30)
 
