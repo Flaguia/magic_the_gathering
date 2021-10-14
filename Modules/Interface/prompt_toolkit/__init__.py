@@ -16,6 +16,7 @@ Probably, to get started, you meight also want to have a look at
 from .interface import CommandLineInterface
 from .application import AbortAction, Application
 from .shortcuts import prompt, prompt_async
+from .token import Token
 
 
 # Don't forget to update in `docs/conf.py`!

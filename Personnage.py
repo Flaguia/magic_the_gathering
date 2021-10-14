@@ -1,5 +1,4 @@
-from _typeshed import Self
-from Modules import places, Job, Outil
+from Modules import places, Job, Outil, prompt, Validator, ValidationError
 from random import choice
 
 class Personnage:
@@ -50,8 +49,21 @@ class Personnage:
 		self.jobs[self._place.job].work(self.outils[self._place.outil], self._place)
 		#TODO ajouter les ressources collectées
 
+	def moove(self):
+		listPlaces=[]
+		for key in places.keys():
+			listPlaces.append(key)
+
+		answers = prompt({ # Pose les questions
+			'type': 'list',
+			'name': 'user_option',
+			'message': 'Ou voulez vous aller ?',
+			'choices': listPlaces
+    	})
+		resKey=answers.get("user_option") # Récupère la réponse de la question spécifique
+		print(resKey)
+
 tess = Personnage("tess",[], 100, 15, 40, 400, 30)
 
-
-
 print(tess.get_inventaire())
+tess.moove()
