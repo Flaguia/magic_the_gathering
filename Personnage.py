@@ -1,20 +1,24 @@
 from Modules import places, Job, Outil
-from random import randint
+from random import choice
 
 class Personnage:
 	def __init__(self, nom, inventaire_pve, vie, attaque, magie, mana, vitesse):
 		self.nom = nom 
-		self.inventaire = list(inventaire)
+		#self.inventaire = list(inventaire)
 
 		self.vie = vie
 		self.attaque = attaque
 		self.magie = magie
 		self.mana = mana
 		self.vitesse = vitesse
+		
+		self._jobs = {"Lumberjack":Job("Lumberjack")}
+		punch=Outil("Punch")
+		self._outils = {"Axe":punch}
+		namePlace, objPlace = choice(list(places.items())) # Récupère un lieu random
+		self._place = {namePlace, objPlace} # Sauvegarde ce lieu sous forme de dictoinaire
+		
 
-		self._place=places[randint(0,len(places-1))] # Un object place #TODO (Faire spawn dans un lieu random)
-        self._jobs={"Lumberjack":Job("Lumberjack")}
-        self._outils={"Axe":Outil("Axe")}
     
 
 	def ajouter_inventaire(self, objet):
