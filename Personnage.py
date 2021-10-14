@@ -1,3 +1,5 @@
+from Modules import places, Job, Outil
+from random import randint
 
 class Personnage:
 	def __init__(self, nom, inventaire_pve, vie, attaque, magie, mana, vitesse):
@@ -9,6 +11,11 @@ class Personnage:
 		self.magie = magie
 		self.mana = mana
 		self.vitesse = vitesse
+
+		self._place=places[randint(0,len(places-1))] # Un object place #TODO (Faire spawn dans un lieu random)
+        self._jobs={"Lumberjack":Job("Lumberjack")}
+        self._outils={"Axe":Outil("Axe")}
+    
 
 	def ajouter_inventaire(self, objet):
 		
@@ -36,6 +43,11 @@ class Personnage:
 					
 		else: print("Ustensille non présent")
 
+
+    def work(self):
+        self.jobs[self._place.job].work(self.outils[self._place.outil], self._place)
+        ressourcesCollected=self.addRessources()
+        print(ressourcesCollected)
 
 tess = Personnage("tess",[], 100, 15, 40, 400, 30)
 
