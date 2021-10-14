@@ -6,7 +6,6 @@ from __future__ import unicode_literals
 import functools
 import os
 import signal
-import six
 import sys
 import textwrap
 import threading
@@ -43,6 +42,17 @@ __all__ = (
     'CommandLineInterface',
 )
 
+def exec_(_code_, _globs_=None, _locs_=None):
+    """Execute code in a namespace."""
+    if _globs_ is None:
+        frame = sys._getframe(1)
+        _globs_ = frame.f_globals
+        if _locs_ is None:
+            _locs_ = frame.f_locals
+        del frame
+    elif _locs_ is None:
+        _locs_ = _globs_
+    exec("""exec _code_ in _globs_, _locs_""")
 
 class CommandLineInterface(object):
     """
@@ -261,7 +271,7 @@ class CommandLineInterface(object):
 
         # Make sure that this function returns a unicode object,
         # and not a byte string.
-        assert result is None or isinstance(result, six.text_type)
+        assert result is None or isinstance(result, str)
         return result
 
     @property
@@ -435,7 +445,7 @@ class CommandLineInterface(object):
         # The following `run_async` function is compiled at runtime
         # because it contains syntax which is not supported on older Python
         # versions. (A 'return' inside a generator.)
-        six.exec_(textwrap.dedent('''
+        exec_(textwrap.dedent('''
         def run_async(self, reset_current_buffer=True, pre_run=None):
             """
             Same as `run`, but this returns a coroutine.
