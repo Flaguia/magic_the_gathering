@@ -5,6 +5,7 @@ class Place:
         self.name=name
         self.ressources=ressources
         self.job=job
+        self.tool=tool
         self.mobs=[]
         self.moovePossibles=[]
 
@@ -23,12 +24,12 @@ resMountain=[
     {"name":"Diamond", "multiplier":0.05},
     ]
 
-forest=Place("Forest",  resForest, "Lumberjack")
-mountain=Place("Mountain",  resMountain, "Mineur")
-plain=Place("Plain", [], "Hunter")
-river=Place("River", [], "Fisherman")
-swamp=Place("Swamp", [], "Fisherman")
-desert=Place("Desert", [], "Hunter")
+forest=Place("Forest",  resForest, "Lumberjack", "Axe")
+mountain=Place("Mountain",  resMountain, "Mineur", "Pickaxe")
+plain=Place("Plain", [], "Hunter", "Sword")
+river=Place("River", [], "Fisherman", "Fishing Rod")
+swamp=Place("Swamp", [], "Fisherman", "Fishing Rod")
+desert=Place("Desert", [], "Hunter", "Sword")
 
 
 forest.moovePossibles=[mountain,river,plain,desert]

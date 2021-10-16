@@ -1,7 +1,7 @@
 from math import sqrt
 
 class Tool:
-    def __init__(self,name,durability, efficacite):
+    def __init__(self,name, efficacite, durability=False,):
         self.name=name 
         self.durability=durability
         self.multiplier=efficacite
@@ -24,6 +24,7 @@ class Tool:
 
     def use(self,xp,damage): # Quand on uttilise l'outil, ça lui fait gagner des niveaux, et predre de la durabilité
         self._addXp(xp)
-        self.durability-=damage
-        if self.durability<0:
-            print(f"Votre {self.name} s'est cassé")
+        if self.durability: # Si durabilité n'est pas False
+            self.durability-=damage
+            if self.durability<0:
+                print(f"Votre {self.name} s'est cassé")

@@ -4,28 +4,25 @@ from math import sqrt
 class Job:
     def __init__(self, name):
         self.name=name
-        self.lvl=0
-        self.xp=0
+        self.experiance=[1,0,100] # Le niveau, l'xp, l'xp max pour lvl up
         self.multiplier=1
-        self.outil
         
-    def work(self,outil, place):
-        self.addXp(50)        
-
-        if outil.durability<0:
+    def work(self,tool, place):
+        self.addXp(50)
+        if tool.durability<0:
             return print(f"Votre {self.name} est cassé")
 
-        outil.use(50,20) # Utilise l'outil
-
+        tool.use(50,20) # Utilise l'outil
+        
         ressources=[]
         for ressource in place.ressources:
-            nb=ressource["multiplier"]*outil.multiplier*self.multiplier
+            nb=ressource["multiplier"]*tool.multiplier*self.multiplier
             ressources.append({"name":ressource["name"], "collect":nb})
 
         return ressources
 
     def addXp(self,nbXp):
-                # On décompose la liste proprement
+        # On décompose la liste proprement
         lvl=self.experiance[0]
         xp=self.experiance[1]
         xpMax=self.experiance[2]

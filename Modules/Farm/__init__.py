@@ -1,2 +1,2 @@
 from .jobs import Job
-from .tools import Outil
+from .tools import Tool
