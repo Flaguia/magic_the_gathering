@@ -2,10 +2,12 @@
 from math import sqrt
 
 class Job:
-    def __init__(self):
+    def __init__(self, name):
+        self.name=name
         self.lvl=0
         self.xp=0
         self.multiplier=1
+        self.outil
         
     def work(self,outil, place):
         self.addXp(50)        

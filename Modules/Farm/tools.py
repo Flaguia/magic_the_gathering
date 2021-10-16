@@ -1,6 +1,6 @@
 from math import sqrt
 
-class Outil:
+class Tool:
     def __init__(self,name,durability, efficacite):
         self.name=name 
         self.durability=durability

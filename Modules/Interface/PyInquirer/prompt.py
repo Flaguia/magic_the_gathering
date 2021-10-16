@@ -2,6 +2,13 @@
 
 from __future__ import absolute_import, print_function
 
+# Pour acceder à prompt_toolkit
+import os,sys,inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0,parentdir) 
+#-- 
+
 from prompt_toolkit.shortcuts import run_application
 
 from . import PromptParameterException, prompts

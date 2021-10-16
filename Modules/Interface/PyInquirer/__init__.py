@@ -2,6 +2,12 @@
 
 from __future__ import absolute_import, print_function
 import os
+# Pour acceder à prompt_toolkit
+import sys,inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0,parentdir) 
+#-- 
 
 from prompt_toolkit.token import Token
 from prompt_toolkit.styles import style_from_dict

@@ -1,6 +1,11 @@
 from __future__ import unicode_literals
 from abc import ABCMeta, abstractmethod
-from Modules.six import with_metaclass
+
+import sys
+from os import path
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+
+from six import with_metaclass
 
 from prompt_toolkit.utils import test_callable_args
 

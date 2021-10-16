@@ -1,69 +1,38 @@
-from Modules import places, Job, Outil, prompt, Validator, ValidationError
+from Modules import places, Job, Tool, Interface
 from random import choice
 
+# places = {"nom":obj, "nom":obj,...}
+
+
 class Personnage:
-	def __init__(self, nom, inventaire_pve, vie, attaque, magie, mana, vitesse):
+	def __init__(self, nom, inventaire, vie, attaque, magie, mana, vitesse):
 		self.nom = nom 
-		#self.inventaire = list(inventaire)
 
 		self.vie = vie
 		self.attaque = attaque
 		self.magie = magie
 		self.mana = mana
 		self.vitesse = vitesse
-		
-		self._jobs = {"Lumberjack":Job("Lumberjack")}
-		punch=Outil("Punch")
-		self._outils = {"Axe":punch}
+
 		namePlace, objPlace = choice(list(places.items())) # Récupère un lieu random
-		self._place = {namePlace, objPlace} # Sauvegarde ce lieu sous forme de dictoinaire
-		
-
-	def ajouter_inventaire(self, objet):
-		
-		self.inventaire.append(objet)
-
-	def	get_inventaire(self):
-			items = []
-			for objet in self.inventaire:
-				items.append((objet.nom, objet.quantité))
-			return items
-
-	def contient_objet(self,ustensile):
-		for objet in self.inventaire:
-			if ustensile == objet.nom:
-				return True
-			return False
-
-	def jeter_objet(self, ustensile):
-		if self.contient_ustensil(ustensile):
-			i = 0
-			for objet in self.contenu:
-				if ustensile == objet.nom:
-					self.contenu.pop(i)
-				i=+1
-					
-		else: print("Ustensille non présent")
-
-	def work(self):
-		self.jobs[self._place.job].work(self.outils[self._place.outil], self._place)
-		#TODO ajouter les ressources collectées
+		self._place = (namePlace, objPlace) # Sauvegarde ce lieu sous forme de dictoinaire
+		self._inventaire={"iRessouces":[], "iWeapon":[], "iArmor":[],"iSpell":[]}
+		self.jobs={"Lumberjack":Job("Lumberjack"),
+				"Mineur":Job("Mineur"),
+				"Hunter":Job("Hunter"),
+				"Fisherman":Job("Fisherman")
+		}
+		self.tools={"Punch":Tool("Punch")}
 
 	def moove(self):
-		listPlaces=[]
-		for key in places.keys():
-			listPlaces.append(key)
-
-		answers = prompt({ # Pose les questions
+		choicesPlaces=self._place[1].moovePossibles # Récup les mouvements possibles a partir de ce lieu
+		answers = Interface.prompt({ # Pose la questions
 			'type': 'list',
 			'name': 'user_option',
-			'message': 'Ou voulez vous aller ?',
-			'choices': listPlaces
+			'message': 'Ou voulez-vous aller ?',
+			'choices': list(map(str, choicesPlaces)) # Convertis mes objects en chaine de charactère
     	})
 		resKey=answers.get("user_option") # Récupère la réponse de la question spécifique
-		print(resKey)
+		self._place=(resKey,places[resKey]) # Sauvegarde la nouvelle place ("nom", obj)
+		print("Vous vennez de bouger vers :", resKey)
 
-tess = Personnage("tess",[], 100, 15, 40, 400, 30)
-
-print(tess.get_inventaire())
-tess.moove()
