@@ -15,13 +15,13 @@ class Place:
     def spawnMob(self):
         return
     
-resForest=[{"name":"Wood", "multiplier":1},{"name":"Cobble", "multiplier":0.1}]
+resForest=[{"name":"Wood", "rarity":1,"timeToBreak":1,"stock":100}]
 resMountain=[
-    {"name":"Cobble", "multiplier":1},
-    {"name":"Coal", "multiplier":0.7},
-    {"name":"Iron", "multiplier":0.4},
-    {"name":"Gold", "multiplier":0.2},
-    {"name":"Diamond", "multiplier":0.05},
+    {"name":"Cobble", "rarity":1,"timeToBreak":3,"stock":500},
+    {"name":"Coal", "rarity":2,"timeToBreak":5,"stock":100},
+    {"name":"Iron", "rarity":5,"timeToBreak":10,"stock":50},
+    {"name":"Gold", "rarity":10,"timeToBreak":20,"stock":30},
+    {"name":"Diamond", "rarity":20,"timeToBreak":30,"stock":20},
     ]
 
 forest=Place("Forest",  resForest, "Lumberjack", "Axe")

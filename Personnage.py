@@ -15,7 +15,7 @@ class Personnage:
 
 		namePlace, objPlace = choice(list(places.items())) # Récupère un lieu random
 		self._place = (namePlace, objPlace) # Sauvegarde ce lieu sous forme de dictoinaire
-		self._inventaire={"iRessouces":[], "iWeapons":[], "iArmors":[],"iSpells":[], "iTools":{"Punch":Tool("Punch", 1)}}
+		self._inventaire={"iRessouces":{}, "iWeapons":[], "iArmors":[],"iSpells":[], "iTools":{"Punch":Tool("Punch", 1)}}
 		self.jobs={"Lumberjack":Job("Lumberjack"),
 				"Mineur":Job("Mineur"),
 				"Hunter":Job("Hunter"),
@@ -33,9 +33,12 @@ class Personnage:
 			except:
 				tool=self._inventaire["iTools"]["Punch"] # On uttilise le poing
 
-		ressources=job.work(tool, self._place[1])
-		print(ressources)
-		self._inventaire["iRessouces"].append(ressources)
+		ressources=job.work(tool, self._place[1]) # Récupère les ressources 
+
+		# Rajout des ressources dans l'inventaire
+		for key in ressources.keys():
+			try: self._inventaire["iRessouces"][key]+=ressources[key] # On esssaye d'ajouter le nombre d'elements recupéré dans la ressource deja existante
+			except: self._inventaire["iRessouces"][key]=ressources[key] # On creer la ressource dans l'inventaire avec son nombre d'element
 
 	def moove(self):
 		choicesPlaces=self._place[1].moovePossibles # Récup les mouvements possibles a partir de ce lieu
@@ -52,3 +55,4 @@ class Personnage:
 test=Personnage("coucou")
 
 test.work()
+print(test._inventaire["iRessouces"])

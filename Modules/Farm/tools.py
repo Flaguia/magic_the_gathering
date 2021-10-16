@@ -5,6 +5,8 @@ class Tool:
         self.name=name 
         self.durability=durability
         self.multiplier=efficacite
+        self._speed=1
+        self._looting=1
         self.experiance=[1,0,100] # Le niveau, l'xp, l'xp max pour lvl up
 
     def __str__(self):
