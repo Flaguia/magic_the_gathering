@@ -23,6 +23,7 @@ class Personnage:
 		}
 
 	def work(self):
+		#TODO Fix le bug de l'xp de l'outil
 		job=self.jobs[self._place[1].job]
 
 		try:
@@ -39,16 +40,45 @@ class Personnage:
 		for key in ressources.keys():
 			try: self._inventaire["iRessouces"][key]+=ressources[key] # On esssaye d'ajouter le nombre d'elements recupéré dans la ressource deja existante
 			except: self._inventaire["iRessouces"][key]=ressources[key] # On creer la ressource dans l'inventaire avec son nombre d'element
+		 
+		# Affiche les ressources collectées
+		invRessources=""
+		if ressources:
+			for key, value in ressources.items():
+				invRessources+=f"<i>{key}</i>: <orange>{value}</orange>\n"
+		else: invRessources="<red>Vous n'avez rien récupéré durant votre travail !</red>"
+		Interface.print_formatted_text(Interface.HTML(
+			f'<b><green>--- Ressources Récoltées ---</green></b>\n{invRessources}'
+		))
+		
 
 	def moove(self):
 		choicesPlaces=self._place[1].moovePossibles # Récup les mouvements possibles a partir de ce lieu
-		answers = Interface.prompt({ # Pose la questions
-			'type': 'list',
-			'name': 'user_option',
-			'message': 'Ou voulez-vous aller ?',
-			'choices': list(map(str, choicesPlaces)) # Convertis mes objects en chaine de charactère
-    	})
-		resKey=answers.get("user_option") # Récupère la réponse de la question spécifique
+		resKey = Interface.questionary.select( # Pose une question
+			"Ou voulez-vous aller ?",
+			choices=list(map(str, choicesPlaces)) # Convertis mes objects en chaine de charactère
+		).ask()
+
 		self._place=(resKey,places[resKey]) # Sauvegarde la nouvelle place ("nom", obj)
-		print("Vous vennez de bouger vers :", resKey)
+		Interface.print_formatted_text(Interface.HTML(f'Vous vennez de bouger vers : <b>{resKey}</b>'))
+
+
+	def showInventaire(self):
+		invRessources=""
+		if self._inventaire["iRessouces"]:
+			for key, value in self._inventaire["iRessouces"].items():
+				invRessources+=f"<i>{key}</i>: <orange>{value}</orange>\n"
+		else: invRessources="<red>Vous n'avez aucunes ressources pour le moment !</red>"
+
+		invTools=""
+		for key, value in self._inventaire["iTools"].items():
+			invTools+=f"<i>{key}</i>: <orange>{str(value)}</orange>\n"
+
+		Interface.print_formatted_text(Interface.HTML(f'<b><green>--- Ressources ---</green></b>\n{invRessources}\n<b><green>--- Outils ---</green></b>\n{invTools}\n'))
+
+
+test=Personnage("prout")
+test.showInventaire()
+test.moove()
+test.work()
 
