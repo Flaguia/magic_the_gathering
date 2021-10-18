@@ -1,7 +1,7 @@
 from math import sqrt
-from classe import Classe_joueur
+from .classe_Joueur import Classe
 class Armes:
-    def __init__(self,name,durability, damage, magic_damage, classe_equipable):
+    def __init__(self,name,durability, damage, magic_damage, classe_equipable= []):
         self.name=name 
         self.durability=durability
         self.damage=damage
