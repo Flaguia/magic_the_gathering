@@ -13,7 +13,7 @@ class Mob:
 	def __str__(self):
 		return f'{self.nom}, élément: {self.éléments}, vie: {self.vie}, damage: {self.damage}, magie: {self.magie}, mana: {self.mana}, vitesse: {self.vitesse}, compétence: {self.ability}'
 
-humain = Mob("humain", "lumière", 100000, 2, 0, 50, 15, [])
+humain = Mob("humain", "lumière", 100, 2, 0, 50, 15, [])
 ange = Mob("ange", "lumière", 150, 15, 25, 100, 30, [])
 squelette = Mob("squelette", "ténebre", 100, 15, 10, 30, 10, [])
 zombie = Mob("zombie", "ténebre", 120, 20 ,0, 0, 10, [])

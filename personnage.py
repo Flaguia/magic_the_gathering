@@ -5,6 +5,7 @@ import os
 def clear_screen(): 
 	_ = os.system("cls" if os.name == "nt" else "clear") 
 
+
 class Personnage:
 	def __init__(self, nom, classe="",arme=spell.poing, ability = []):
 		self.nom = nom 
@@ -95,17 +96,48 @@ class Personnage:
 			invTools+=f"<i>{key}</i>: <orange>{str(value)}</orange>\n"
 
 		Interface.print_formatted_text(Interface.HTML(f'<b><green>--- Ressources ---</green></b>\n{invRessources}\n<b><green>--- Outils ---</green></b>\n{invTools}\n'))
-	
+	def update_vie(self, init_vie_self, init_vie_mob):
+		len_barre_vie = 20
+		
+		vie_perso = "["
+
+		r = ((100* round(init_vie_self[0]/init_vie_self[1]))/5)
+		for i in range(r):
+			vie_perso += "I"
+		for i in range(len_barre_vie - (len(vie_perso)-1)):
+			vie_perso += "."
+		vie_perso += "]"
+
+		vie_mob = "["
+
+		r= (100* round(init_vie_mob[0]/init_vie_mob[1])/5)
+		for i in range(r):
+			vie_mob += "I"
+		for i in range(len_barre_vie - (len(vie_mob)-1)):
+			vie_mob += "."
+		vie_mob += "]"
+		liste_vie = [vie_perso, vie_mob]
+		return liste_vie
+
 	def combat_Joueur(self, Mob):
 		clear_screen()
 		print("un {} vous attaque".format(mob.humain.nom))
 		print("")
 		
-		x=0
-		etat_précédent= {}
-		while self.vie > 0 and Mob.vie >0: #on effectue le combatr ju:squ'a que l'un des participants n'as plus de vie
-			etat_actuel= {}
 
+		init_vie_self = [self.vie, self.vie]
+		init_vie_mob = [Mob.vie, Mob.vie]
+		
+
+		
+
+
+
+		x=0
+		
+		while self.vie > 0 and Mob.vie >0: #on effectue le combatr ju:squ'a que l'un des participants n'as plus de vie
+			
+			etat_précédent= {}
 			liste_action = [self.arme]      #on selectionne toutes les actions pouvant êtres  entreprise 
 			action_affichage = [self.arme.name]
 			not_enough_mana = []
@@ -124,8 +156,8 @@ class Personnage:
 			).ask()
 			choix_attaque = resKey
 			if x ==0:
-				etat_précédent[1] =f'<b><white>qu\'elle attaque voulez vous utiliser ?</white><yellow> {choix_attaque} </yellow></b>'
-			else: etat_actuel[1] =f'<b><white>qu\'elle attaque voulez vous utiliser ?</white><yellow> {choix_attaque} </yellow></b>'
+				etat_précédent[1] =f'<b><white>dernière action :</white><yellow> {choix_attaque} </yellow></b>'
+			
 
 
 			compétence = {}   #on associe les réponse en string a nos objet respectuelle gràce à un dictionnaire
@@ -136,32 +168,43 @@ class Personnage:
 
 			if self.vitesse>Mob.vitesse:
 				Mob.vie -= choix_attaque.damage
+
+				init_vie_mob[0] = Mob.vie
+				
+				vie_mob = self.update_vie(init_vie_self, init_vie_mob)
+				
+				vie_mob = vie_mob[1]
+
 				Interface.print_formatted_text(Interface.HTML(f'<b><green>{self.nom} inflige {choix_attaque.damage} dégat à {Mob.nom}</green></b>'))
-				Interface.print_formatted_text(Interface.HTML(f'<b><red>{Mob.nom} pv restant : {Mob.vie}</red></b>'))
+				Interface.print_formatted_text(Interface.HTML(f'<i><red>{Mob.nom} pv restant : {vie_mob}</red></i>'))
 				
 				if x == 0:
+					
 					etat_précédent[2] =f'<b><green>{self.nom} inflige {choix_attaque.damage} dégat à {Mob.nom}</green></b>'
-					etat_précédent[3] =f'<b><red>{Mob.nom} pv restant : {Mob.vie}</red></b>'
-				else :
-					etat_actuel[2] =f'<b><green>{self.nom} inflige {choix_attaque.damage} dégat à {Mob.nom}</green></b>'
-					etat_actuel[3] =f'<b><red>{Mob.nom} pv restant : {Mob.vie}</red></b>'
+					etat_précédent[3] =f'<i><red>{Mob.nom} pv restant : {vie_mob} {Mob.vie}</red></i>'
+				
 
 				if Mob.vie <= 0:
 					print("")
 					Interface.print_formatted_text(Interface.HTML(f'<b><green>GG vous avez gagnée</green></b>'))
 					break 
+
 				
 				print("")
+
 				self.vie -= Mob.damage
+				init_vie_self[0] = self.vie
+				vie_personnage = self.update_vie(init_vie_self, init_vie_mob)
+				
+				vie_personnage = vie_personnage[0]
+
 				Interface.print_formatted_text(Interface.HTML(f'<b><red>{Mob.nom} vous inflige {Mob.damage} dégat à {self.nom}</red></b>'))
 				Interface.print_formatted_text(Interface.HTML(f'<b><green>{self.nom} pv restant : {self.vie}</green></b>'))
 
 				if x==0:
 					etat_précédent[4] =f'<b><red>{Mob.nom} vous inflige {Mob.damage} dégat à {self.nom}</red></b>'
-					etat_précédent[5] =f'<b><green>{self.nom} pv restant : {self.vie}</green></b>'
-				else:
-					etat_actuel[4] =f'<b><red>{Mob.nom} vous inflige {Mob.damage} dégat à {self.nom}</red></b>'
-					etat_actuel[5] =f'<b><green>{self.nom} pv restant : {self.vie}</green></b>'
+					etat_précédent[5] =f'<b><green>{self.nom} pv restant : {vie_personnage} {self.vie}</green></b>'
+				
 
 
 				if self.vie <= 0:
@@ -170,16 +213,20 @@ class Personnage:
 					break 
 			else : 
 				self.vie -= Mob.damage
+
+				init_vie_self[0] = self.vie
+				vie_mob = self.update_vie(init_vie_self, init_vie_mob)
+				
+				vie_mob = vie_mob[1]
+
 				Interface.print_formatted_text(Interface.HTML(f'<b><red>{Mob.nom} vous inflige {Mob.damage} dégat à {self.nom}</red></b>'))
 				Interface.print_formatted_text(Interface.HTML(f'<b><green>{self.nom} pv restant : {self.vie}</green></b>'))
 				
 
 				if x==0:
 					etat_précédent[2] =f'<b><red>{Mob.nom} vous inflige {Mob.damage} dégat à {self.nom}</red></b>'
-					etat_précédent[3] =f'<b><green>{self.nom} pv restant : {self.vie}</green></b>'
-				else:
-					etat_actuel[2] =f'<b><red>{Mob.nom} vous inflige {Mob.damage} dégat à {self.nom}</red></b>'
-					etat_actuel[3] =f'<b><green>{self.nom} pv restant : {self.vie}</green></b>'
+					etat_précédent[3] =f'<b><green>{self.nom} pv restant : {vie_personnage} {self.vie}</green></b>'
+				
 
 				if self.vie <= 0:
 					print("")
@@ -188,16 +235,20 @@ class Personnage:
 
 				print("")
 				Mob.vie -= choix_attaque.damage
+
+				init_vie_mob[0] = Mob.vie
+				
+				vie_mob = self.update_vie(init_vie_self, init_vie_mob)
+				
+				vie_mob = vie_mob[1]
+
 				Interface.print_formatted_text(Interface.HTML(f'<b><green>{self.nom} inflige {choix_attaque.damage} dégat à {Mob.nom}</green></b>'))
-				Interface.print_formatted_text(Interface.HTML(f'<b><red>{Mob.nom} pv restant : {Mob.vie}</red></b>'))
+				Interface.print_formatted_text(Interface.HTML(f'<b><red>{Mob.nom} pv restant : {vie_mob} {Mob.vie}</red></b>'))
 
 				if x==0:
 					etat_précédent[4] = f'<b><red>{Mob.nom} vous inflige {Mob.damage} dégat à {self.nom}</red></b>'
-					etat_précédent[5] =f'<b><green>{self.nom} pv restant : {self.vie}</green></b>'
-				else:
-					etat_actuel[4] =f'<b><red>{Mob.nom} vous inflige {Mob.damage} dégat à {self.nom}</red></b>'
-					etat_actuel[5] =f'<b><green>{self.nom} pv restant : {self.vie}</green></b>'
-
+					etat_précédent[5] =f'<b><green>{self.nom} pv restant : {vie_personnage} {self.vie}</green></b>'
+				
 			
 				if Mob.vie <= 0:
 					print("")
@@ -207,14 +258,11 @@ class Personnage:
 			
 			for element in range(len(etat_précédent)):
 				Interface.print_formatted_text(Interface.HTML(etat_précédent[element+1]))
-				if x != 0:
-					etat_précédent[element+1] = etat_actuel[element+1]
-			etat_actuel= {}
-			print(x)
-			print(etat_précédent)
+				
 			
 			
-			x+=1
+			
+			
 
 
 
@@ -222,9 +270,8 @@ class Personnage:
 
 
 test=Personnage("Valeera")
-test.class_choice()
-test = Personnage(test.nom,test.classe,ability=[spell.coup_bas, spell.sort_trop_chere])
-print("")
-test.combat_Joueur(mob.humain)
+while True:
+	test.work()
+
 
 
