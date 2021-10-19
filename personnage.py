@@ -3,7 +3,6 @@ sys.path.insert(0, "./Modules/Interface")
 
 from Modules import places, Job, Tool, Interface, classe_Joueur, mob, spell
 
-# places = {"nom":obj, "nom":obj,...}
 def clear_screen(): 
 	_ = os.system("cls" if os.name == "nt" else "clear") 
 
@@ -261,19 +260,3 @@ class Personnage:
 			for element in range(len(etat_précédent)):
 				Interface.print_formatted_text(Interface.HTML(etat_précédent[element+1]))
 				
-			
-			
-			
-			
-
-
-
-
-
-
-test=Personnage("Valeera")
-while True:
-	test.work()
-
-
-
