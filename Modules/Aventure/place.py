@@ -1,6 +1,17 @@
-# La place est commune à touts les personages
+# Les palces sont les mêmes pour touts les joueurs
 
 class Place:
+    """
+        Un object place qui correspond a un endroit sur la map.
+        Il a comme attribut:
+        - Un nom
+        - Une liste de ressources
+        - Un type de métier et d'outil
+        - La liste de tous les mobs combattable a cet endroit
+        - Les mouvements vers d'autre places possibles (Voir map.txt)
+       
+    """
+    
     def __init__(self, name, ressources, job, tool):
         self.name=name
         self.ressources=ressources
