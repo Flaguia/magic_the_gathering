@@ -8,11 +8,17 @@ class Place:
         - Une liste de ressources
         - Un type de métier et d'outil
         - La liste de tous les mobs combattable a cet endroit
-        - Les mouvements vers d'autre places possibles (Voir map.txt)
-       
+        - Les mouvements vers d'autre places possibles (Voir map.txt)     
     """
     
     def __init__(self, name, ressources, job, tool):
+        """
+            Fonction initialisation:
+                name: Un str
+                ressources: Une liste de dictionnaire de la forme -> [{"name":str, "rarity":int,"timeToBreak":int,"stock":int},...]
+                job: Un str
+                tool: Un str          
+        """
         self.name=name
         self.ressources=ressources
         self.job=job
@@ -25,7 +31,8 @@ class Place:
 
     def spawnMob(self):
         return
-    
+
+# Les listes des ressources 
 resForest=[{"name":"Wood", "rarity":1,"timeToBreak":1,"stock":100}]
 resMountain=[
     {"name":"Cobble", "rarity":1,"timeToBreak":3,"stock":500},
@@ -35,6 +42,7 @@ resMountain=[
     {"name":"Diamond", "rarity":20,"timeToBreak":30,"stock":20},
     ]
 
+# On génère nos places
 forest=Place("Forest",  resForest, "Lumberjack", "Axe")
 mountain=Place("Mountain",  resMountain, "Mineur", "Pickaxe")
 plain=Place("Plain", [], "Hunter", "Sword")
@@ -42,7 +50,7 @@ river=Place("River", [], "Fisherman", "Fishing Rod")
 swamp=Place("Swamp", [], "Fisherman", "Fishing Rod")
 desert=Place("Desert", [], "Hunter", "Sword")
 
-
+# On créé les liaisons entre les places
 forest.moovePossibles=[mountain,river,plain,desert]
 mountain.moovePossibles=[forest,river]
 plain.moovePossibles=[river,forest,desert]
@@ -50,4 +58,5 @@ river.moovePossibles=[plain,swamp,mountain,forest]
 swamp.moovePossibles=[river]
 desert.moovePossibles=[plain,forest]
 
+# On exporte un dictionnaire avec comme clef les noms et comme valeur les object correspondant
 places={"Forest":forest, "Mountain":mountain, "Plain":plain, "River":river, "Swamp":swamp, "Desert":desert}
