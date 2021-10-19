@@ -1,15 +1,8 @@
-# Le metier doit être unique à chaque personage
-
-# Pour acceder à prompt_toolkit
-import os,sys,inspect
-currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-sys.path.insert(0,parentdir) 
-#-- 
+# Le metier doit être unique à chaque joueur
 
 from math import sqrt
 from Modules import Interface
-import time, random, signal
+import time, random
 
 class Job:
     def __init__(self, name):
@@ -54,7 +47,6 @@ class Job:
             cancel = [False]
             @kb.add('x') # Le racourci clavier
             def _(event):
-                " Send Abort (control-c) signal. "
                 cancel[0] = True
 
             titleOfProgressBar = Interface.HTML('Travail en cour...')
