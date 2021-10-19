@@ -94,29 +94,3 @@ class Personnage:
             invTools+=f"<i>{key}</i>: <orange>{str(value)}</orange>\n"
 
         Interface.print_formatted_text(Interface.HTML(f'<b><green>--- Ressources ---</green></b>\n{invRessources}\n<b><green>--- Outils ---</green></b>\n{invTools}\n'))
-
-    def update_vie(self, init_vie_self, init_vie_mob):
-        len_barre_vie = 20
-        
-        vie_perso = "["
-
-        r = ((100* round(init_vie_self[0]/init_vie_self[1]))/5)
-        for i in range(r):
-            vie_perso += "I"
-        for i in range(len_barre_vie - (len(vie_perso)-1)):
-            vie_perso += "."
-        vie_perso += "]"
-
-        vie_mob = "["
-
-        r= (100* round(init_vie_mob[0]/init_vie_mob[1])/5)
-        for i in range(r):
-            vie_mob += "I"
-        for i in range(len_barre_vie - (len(vie_mob)-1)):
-            vie_mob += "."
-        vie_mob += "]"
-        liste_vie = [vie_perso, vie_mob]
-        return liste_vie
-
-perso=Personnage("a")
-perso.work()

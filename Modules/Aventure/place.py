@@ -33,22 +33,54 @@ class Place:
         return
 
 # Les listes des ressources 
-resForest=[{"name":"Wood", "rarity":1,"timeToBreak":1,"stock":100}]
+resForest=[
+    {"name":"Bois", "rarity":1,"timeToBreak":1,"stock":10},
+    {"name": "Champignon", "rarity":5,"timeToBreak":5, "stock":10},
+    {"name": "Fruit douteux", "rarity":10,"timeToBreak":10, "stock":10}
+]
+
 resMountain=[
-    {"name":"Cobble", "rarity":1,"timeToBreak":3,"stock":500},
-    {"name":"Coal", "rarity":2,"timeToBreak":5,"stock":100},
-    {"name":"Iron", "rarity":5,"timeToBreak":10,"stock":50},
-    {"name":"Gold", "rarity":10,"timeToBreak":20,"stock":30},
-    {"name":"Diamond", "rarity":20,"timeToBreak":30,"stock":20},
-    ]
+    {"name":"Pierre", "rarity":1,"timeToBreak":3,"stock":50},
+    {"name":"Charbon", "rarity":2,"timeToBreak":5,"stock":10},
+    {"name":"Fer", "rarity":5,"timeToBreak":10,"stock":50},
+    {"name":"Or", "rarity":10,"timeToBreak":20,"stock":30},
+    {"name":"Diamand", "rarity":20,"timeToBreak":30,"stock":5},
+]
+
+resPlain = [
+    {"name": "Viande", "rarity":2,"timeToBreak":10, "stock":50},
+    {"name": "Viande de poulet", "rarity":2,"timeToBreak":20, "stock":50},
+    {"name": "Viande de vélociraptor", "rarity":2,"timeToBreak":10, "stock":50},
+    {"name": "Pomme", "rarity":2,"timeToBreak":3, "stock":10},
+    {"name": "Légume", "rarity":2,"timeToBreak":50, "stock":10}
+]
+
+resRiver = [
+    {"name": "Poisson", "rarity":2,"timeToBreak":20, "stock":50},
+    {"name": "Algue", "rarity":2,"timeToBreak":10, "stock":50},
+    {"name": "Calamar", "rarity":2,"timeToBreak":5, "stock":50},
+]
+
+resSwamp =  [
+    {"name": "Os", "rarity":2,"timeToBreak":2, "stock":50},
+    {"name": "Champignon vénéneux", "rarity":2,"timeToBreak":5, "stock":50},
+    {"name": "Grimoire déchiré", "rarity":5,"timeToBreak":15, "stock":10},
+    {"name": "Débris de métal", "rarity":2,"timeToBreak":15, "stock":50},
+]
+
+resDesert = [
+    {"name": "Cactus", "rarity":2,"timeToBreak":5, "stock":50},
+    {"name": "Poison de scorpion", "rarity":2,"timeToBreak":5, "stock":50},
+]
+
 
 # On génère nos places
 forest=Place("Forest",  resForest, "Lumberjack", "Axes")
 mountain=Place("Mountain",  resMountain, "Mineur", "Pickaxes")
-plain=Place("Plain", [], "Hunter", "Swords")
-river=Place("River", [], "Fisherman", "Fishing Rods")
-swamp=Place("Swamp", [], "Fisherman", "Fishing Rods")
-desert=Place("Desert", [], "Hunter", "Swords")
+plain=Place("Plain", resPlain, "Hunter", "Swords")
+river=Place("River", resRiver, "Fisherman", "Fishing Rods")
+swamp=Place("Swamp", resSwamp, "Fisherman", "Fishing Rods")
+desert=Place("Desert", resDesert, "Hunter", "Swords")
 
 # On créé les liaisons entre les places
 forest.moovePossibles=[mountain,river,plain,desert]

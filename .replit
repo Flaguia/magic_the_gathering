@@ -1,2 +1,2 @@
 language = "python3"
-run = "python personnage.py"
+run = "python index.py"

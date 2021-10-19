@@ -165,7 +165,7 @@ def select(
                 elif use_shortcuts and not use_arrow_keys:
                     instruction_msg = "(Use shortcuts)"
                 else:
-                    instruction_msg = "(Use arrow keys)"
+                    instruction_msg = "(Uttiliser les fleches)"
                 tokens.append(("class:instruction", instruction_msg))
 
         return tokens

@@ -1,12 +1,26 @@
 import os
 from Modules import Interface
+from math import ceil
 
 def clear_screen(): 
     _ = os.system("cls" if os.name == "nt" else "clear") 
 
+def strVie(init_vie):
+    vie = "["
+    r = ceil((100* (init_vie[0]/init_vie[1]))/5)
+    for i in range(r):
+        vie += "I"
+    for i in range(20 - (len(vie)-1)):
+        vie += "."
+    vie += "]"
+    return vie
+
+def update_vie(init_vie_self, init_vie_mob):
+    return [strVie(init_vie_self), strVie(init_vie_mob)]
+
 def combatJoueur(joueur,mob):    
     clear_screen()
-    print("un {} vous attaque".format(mob.humain.nom))
+    print("un {} vous attaque".format(mob.nom))
     print("")
     
     init_vie_joueur = [joueur.vie, joueur.vie]
@@ -48,10 +62,8 @@ def combatJoueur(joueur,mob):
             mob.vie -= choix_attaque.damage
 
             init_vie_mob[0] = mob.vie
-            
-            vie_mob = joueur.update_vie(init_vie_joueur, init_vie_mob)
-            
-            vie_mob = vie_mob[1]
+                       
+            vie_mob = strVie(init_vie_mob)
             Interface.print_formatted_text(Interface.HTML(f'<b><green>{joueur.nom} inflige {choix_attaque.damage} dégat à {mob.nom}</green></b>'))
             Interface.print_formatted_text(Interface.HTML(f'<i><red>{mob.nom} pv restant : {vie_mob}</red></i>'))
             
@@ -70,9 +82,8 @@ def combatJoueur(joueur,mob):
 
             joueur.vie -= mob.damage
             init_vie_joueur[0] = joueur.vie
-            vie_personnage = joueur.update_vie(init_vie_joueur, init_vie_mob)
             
-            vie_personnage = vie_personnage[0]
+            vie_personnage = strVie(init_vie_joueur)
 
             Interface.print_formatted_text(Interface.HTML(f'<b><red>{mob.nom} vous inflige {mob.damage} dégat à {joueur.nom}</red></b>'))
             Interface.print_formatted_text(Interface.HTML(f'<b><green>{joueur.nom} pv restant : {joueur.vie}</green></b>'))
@@ -90,9 +101,8 @@ def combatJoueur(joueur,mob):
             joueur.vie -= mob.damage
 
             init_vie_joueur[0] = joueur.vie
-            vie_mob = joueur.update_vie(init_vie_joueur, init_vie_mob)
             
-            vie_mob = vie_mob[1]
+            vie_mob = strVie(init_vie_mob)
 
             Interface.print_formatted_text(Interface.HTML(f'<b><red>{mob.nom} vous inflige {mob.damage} dégat à {joueur.nom}</red></b>'))
             Interface.print_formatted_text(Interface.HTML(f'<b><green>{joueur.nom} pv restant : {joueur.vie}</green></b>'))
@@ -109,9 +119,8 @@ def combatJoueur(joueur,mob):
             print("")
             mob.vie -= choix_attaque.damage
 
-            init_vie_mob[0] = mob.vie                
-            vie_mob = joueur.update_vie(init_vie_joueur, init_vie_mob)                
-            vie_mob = vie_mob[1]
+            init_vie_mob[0] = mob.vie           
+            vie_mob = strVie(init_vie_mob)
 
             Interface.print_formatted_text(Interface.HTML(f'<b><green>{joueur.nom} inflige {choix_attaque.damage} dégat à {mob.nom}</green></b>'))
             Interface.print_formatted_text(Interface.HTML(f'<b><red>{mob.nom} pv restant : {vie_mob} {mob.vie}</red></b>'))
