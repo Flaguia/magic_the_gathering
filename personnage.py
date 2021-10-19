@@ -1,6 +1,8 @@
-from Modules import places, Job, Tool, Interface, classe_Joueur, armes, mob, spell
-from random import choice 
-import os
+import os, sys, random
+sys.path.insert(0, "./Modules/Interface")
+
+from Modules import places, Job, Tool, Interface, classe_Joueur, mob, spell
+
 # places = {"nom":obj, "nom":obj,...}
 def clear_screen(): 
 	_ = os.system("cls" if os.name == "nt" else "clear") 
@@ -18,7 +20,7 @@ class Personnage:
 		self.vitesse = 30
 		self.ability = ability
 
-		namePlace, objPlace = choice(list(places.items())) # Récupère un lieu random
+		namePlace, objPlace = random.choice(list(places.items())) # Récupère un lieu random
 		self._place = (namePlace, objPlace) # Sauvegarde ce lieu sous forme de dictoinaire
 		self._inventaire={"iRessouces":{}, "iWeapons":[], "iArmors":[],"iSpells":[], "iTools":{"Punch":Tool("Punch", 1)}}
 		self.jobs={"Lumberjack":Job("Lumberjack"),
