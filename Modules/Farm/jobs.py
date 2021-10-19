@@ -12,72 +12,87 @@ class Job:
         self._looting=1
         
     def work(self,tool, place):
+        ## Retirer
         if tool.durability<0:
             return print(f"Votre {self.name} est cassé")
+        ##
 
-        self.addXp(50) # Fait gagner de l'experiance de travail
+        #TODO rendre proportionnel au temps de travail
+        self.addXp(50) # Fait gagner de l'experiance de travail, proportionnelement au temps de travail
 
+        #TODO Utilisation proportionnel a l'usage
         tool.use(50,20) # Utilise l'outil
         
         collectedRessources={} # Un dictionnaire des ressources collectées: {"cobble":3,"wood":10,...}
         if place.ressources!=[]: # Verrifie qu'il y ai des ressources a recup
+          weights=[]
+          for ressource in place.ressources: # Récupère le poid de chaque ressources
+              weights.append(1/ressource["rarity"]*10) # Plus c'est rare, plus le poid est petit. *10 pour augmenter le poid (sinon c'etais vraiment trop rare)
 
-            weights=[]
-            for ressource in place.ressources: # Récupère le poid de chaque ressources
-                weights.append(1/ressource["rarity"]*10) # Plus c'est rare, plus le poid est petit. *10 pour augmenter le poid (sinon c'etais vraiment trop rare)
+          nbToClame=random.randint(2,5)*self._looting*tool._looting # Calcul du nombres de ressources a recuperer (en fonction du niveau du metier et de l'outil)
+          ressourcesToClame = random.choices(place.ressources, weights=weights, k=nbToClame) # Choisit aléatoirement des ressources (en fonction de leur poid)
+          random.shuffle(ressourcesToClame) # On mélange un peut la liste pour ne pas miner pleins de fois la même chose d'affiler.
+          
+          # Calcul du temps total qu'il va  mettre a miner (Pour l'affichage)
+          timeToAllBreak=0
+          for ressource in ressourcesToClame:
+              timeToAllBreak+=ressource["timeToBreak"]*1-(self._speed/100)*1-(tool._speed/100)
+          
 
-            nbToClame=random.randint(2,5)*self._looting*tool._looting # Calcul du nombres de ressources a recuperer (en fonction du niveau du metier et de l'outil)
-            ressourcesToClame = random.choices(place.ressources, weights=weights, k=nbToClame) # Choisit aléatoirement des ressources (en fonction de leur poid)
-            random.shuffle(ressourcesToClame) # On mélange un peut la liste pour ne pas miner pleins de fois la même chose d'affiler.
-            
-            # Calcul du temps total qu'il va  mettre a miner (Pour l'affichage)
-            timeToAllBreak=0
-            for ressource in ressourcesToClame:
-                timeToAllBreak+=ressource["timeToBreak"]*1-(self._speed/100)*1-(tool._speed/100)
-            
-            # Affiche la barre de progression
-            # Il faut une boucle de temps, qui se repète toutes les 0.1s pour affichier proprement l'avancement du temps
-            # Mais il faut récolter les ressources qu'a un certain temps
-            # Exemple: Il va mettre 80s a tout recolter, et il va recolter de la pierre à la 3ème seconde et du charbon à la 3ème + 5ème seconde
-            # Donc il faut un indice i qui va se repeter timeToAllBreak/0.1
-            # Et un indice j qui va augmenter a chaque récolte de ressource
+          ### Affiche la barre de progression ###
+          
+          # Il faut une boucle de temps, qui se repète toutes les 0.1s pour affichier proprement l'avancement du temps
+          # Mais il faut récolter les ressources qu'a un certain temps
+          # Exemple: Il va mettre 80s a tout recolter, et il va recolter de la pierre à la 3ème seconde et du charbon à la 3ème + 5ème seconde
+          # Donc il faut un indice i qui va se repeter timeToAllBreak/0.1
+          # Et un indice j qui va augmenter a chaque récolte de ressource
 
-            ### Pour l'affichage de la barre de progression ###
-            kb = Interface.KeyBindings()
-            cancel = [False]
-            @kb.add('x') # Le racourci clavier
-            def _(event):
-                cancel[0] = True
+          kb = Interface.KeyBindings()
+          cancel = [False]
+          @kb.add('x') # Le racourci clavier
+          def _(event):
+              cancel[0] = True
 
-            titleOfProgressBar = Interface.HTML('Travail en cour...')
-            bottom_toolbar = Interface.HTML('Appuyez sur <b>[x]</b> pour arrêter maintenant.')
-            custom_formatters = [
-                Interface.formatters.Text('['),
-                Interface.formatters.Percentage(),
-                Interface.formatters.Text('] '),
-                Interface.formatters.Bar(),
-                Interface.formatters.Text('['),
-                Interface.formatters.TimeLeft(),
-                Interface.formatters.Text(']'),
-                ]
-            ####################################################
+          titleOfProgressBar = Interface.HTML('Travail en cour...')
+          bottom_toolbar = Interface.HTML('Appuyez sur <b>[x]</b> pour arrêter maintenant.')
+          custom_formatters = [
+              Interface.formatters.Text('['),
+              Interface.formatters.Percentage(),
+              Interface.formatters.Text('] '),
+              Interface.formatters.Bar(),
+              Interface.formatters.Text('['),
+              Interface.formatters.TimeLeft(),
+              Interface.formatters.Text(']'),
+              ]
 
-            timeStop=0 # Le nombre de 0.1s avant de passer a la ressource suivante
-            j=0
-            with Interface.ProgressBar(title=titleOfProgressBar,formatters=custom_formatters, bottom_toolbar=bottom_toolbar, key_bindings=kb) as pb:
-                for i in pb(range(int(timeToAllBreak/0.1))): # Boucle sur le temps pour tout casser *0.1, la boucle se repète toutes les 0.1s
-                    # TODO retirer l'object dans la place
-                    if i == ressourcesToClame[j]["timeToBreak"]/0.1+timeStop: # Si le temps == nombre de 0.1s qu'a besoin la ressource a casser + le temps des anciennes ressources
-                        try: collectedRessources[ressourcesToClame[j]["name"]]+=1 # On essaye de rajouter 1 a la ressource dans le dictionnaire 
-                        except: collectedRessources[ressourcesToClame[j]["name"]]=1 # Si on y arrive pas, c'est qu'elle existe pas, alors on la créé
-                        timeStop+=ressourcesToClame[j]["timeToBreak"]/0.1 # On calcule le nouveau total de temps
-                        j+=1 # O, change l'indice des ressources
-                    time.sleep(0.1) # la boucle se repète toutes les 0.1s
+          timeStop=0 # Le nombre de 0.1s avant de passer a la ressource suivante
+          j=0
+          with Interface.ProgressBar(title=titleOfProgressBar,formatters=custom_formatters, bottom_toolbar=bottom_toolbar, key_bindings=kb) as pb:
+              for i in pb(range(int(timeToAllBreak/0.1))): # Boucle sur le temps pour tout casser *0.1, la boucle se repète toutes les 0.1s
+                  # TODO retirer l'object dans la place
+                  if i == ressourcesToClame[j]["timeToBreak"]/0.1+timeStop: # Si le temps == nombre de 0.1s qu'a besoin la ressource a casser + le temps des anciennes ressources
+                      try: collectedRessources[ressourcesToClame[j]["name"]]+=1 # On essaye de rajouter 1 a la ressource dans le dictionnaire 
+                      except: collectedRessources[ressourcesToClame[j]["name"]]=1 # Si on y arrive pas, c'est qu'elle existe pas, alors on la créé
+                      timeStop+=ressourcesToClame[j]["timeToBreak"]/0.1 # On calcule le nouveau total de temps
+                      j+=1 # O, change l'indice des ressources
+                  time.sleep(0.1) # la boucle se repète toutes les 0.1s
 
-                    # Arrete si l'utilisateur a pressé x
-                    if cancel[0]:
-                        break
+                  # Arrete si l'utilisateur a pressé x
+                  if cancel[0]:
+                      break
+          ###
 
+        ### Affiche les ressources collectées
+        invRessources=""
+        if collectedRessources: # Si on a collecté des ressources
+          for key, value in collectedRessources.items(): # On recupère le nom, et le nombre de la ressource
+            invRessources+=f"<i>{key}</i>: <orange>{value}</orange>\n"
+        else: invRessources="<red>Vous n'avez rien récupéré durant votre travail !</red>"
+
+        Interface.print_formatted_text(Interface.HTML(
+          f'<b><green>--- Ressources Récoltées ---</green></b>\n{invRessources}'
+        ))
+        ###
         return collectedRessources
 
 

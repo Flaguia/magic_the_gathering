@@ -43,12 +43,12 @@ resMountain=[
     ]
 
 # On génère nos places
-forest=Place("Forest",  resForest, "Lumberjack", "Axe")
-mountain=Place("Mountain",  resMountain, "Mineur", "Pickaxe")
-plain=Place("Plain", [], "Hunter", "Sword")
-river=Place("River", [], "Fisherman", "Fishing Rod")
-swamp=Place("Swamp", [], "Fisherman", "Fishing Rod")
-desert=Place("Desert", [], "Hunter", "Sword")
+forest=Place("Forest",  resForest, "Lumberjack", "Axes")
+mountain=Place("Mountain",  resMountain, "Mineur", "Pickaxes")
+plain=Place("Plain", [], "Hunter", "Swords")
+river=Place("River", [], "Fisherman", "Fishing Rods")
+swamp=Place("Swamp", [], "Fisherman", "Fishing Rods")
+desert=Place("Desert", [], "Hunter", "Swords")
 
 # On créé les liaisons entre les places
 forest.moovePossibles=[mountain,river,plain,desert]
