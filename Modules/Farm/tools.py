@@ -10,7 +10,7 @@ class Tool:
         self.experiance=[1,0,100] # Le niveau, l'xp, l'xp max pour lvl up
 
     def __str__(self):
-        chaine=f"{self.name}, niveau {self.experiance[0]} ({self.experiance[1]}/{self.experiance[2]})"
+        chaine=f"{self.name}, niveau {self.experiance[0]}"
         if self.durability!=False: # Si il a une durabilité
             chaine+=f", durabilité: {self.durability}" # Alors on l'affiche
         return chaine

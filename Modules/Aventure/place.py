@@ -1,6 +1,6 @@
 # Les palces sont les mêmes pour touts les joueurs
 from .repetedFunction import RepeatedTimer
-from random import randint
+from random import randint, choice
 
 class Place:
     """
@@ -106,13 +106,7 @@ desert.moovePossibles=[plain,forest]
 places={"Forest":forest, "Mountain":mountain, "Plain":plain, "River":river, "Swamp":swamp, "Desert":desert}
 
 def addRessourcesInAllPlaces():
-    #TODO en restok 1 aléatoirement
+    objList=[forest, mountain, plain, river, swamp, desert]
+    choice(objList).reStock()
 
-    forest.reStock()
-    mountain.reStock()
-    plain.reStock()
-    river.reStock()
-    swamp.reStock()
-    desert.reStock()
-
-repeat = RepeatedTimer(1, addRessourcesInAllPlaces) # Repete la fonction toutes les 5 secondes
+repeat = RepeatedTimer(10, addRessourcesInAllPlaces) # Repete la fonction toutes les 5 secondes
