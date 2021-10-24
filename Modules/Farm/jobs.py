@@ -11,22 +11,24 @@ class Job:
         self._speed=1
         self._looting=1
         
-    def work(self,tool, place):       
+    def work(self,tool, place):
         collectedRessources={} # Un dictionnaire des ressources collectées: {"cobble":3,"wood":10,...}
         if place.ressources!=[]: # Verrifie qu'il y ai des ressources a recup
             weights=[]
             for ressource in place.ressources: # Récupère le poid de chaque ressources
                 weights.append(1/ressource["rarity"]*10) # Plus c'est rare, plus le poid est petit. *10 pour augmenter le poid (sinon c'etais vraiment trop rare)
 
-            nbToClame=int(random.gauss(15,13)*self._looting*tool._looting) # Calcul du nombres de ressources a recuperer (en fonction de la courbe de gauss, du niveau du metier et de l'outil)
+            nbToClame=int(random.gauss(15,10)*self._looting*tool._looting) # Calcul du nombres de ressources a recuperer (en fonction de la courbe de gauss, du niveau du metier et de l'outil)
             ressourcesToClame = random.choices(place.ressources, weights=weights, k=nbToClame) # Choisit aléatoirement des ressources (en fonction de leur poid)
             random.shuffle(ressourcesToClame) # On mélange un peut la liste pour ne pas miner pleins de fois la même chose d'affiler.
 
             # On verrifie qu'il y ai assez de stock, si il y a pas assez, on le retire
             rTC={} # Compteur d'occurence {"cobble":3,...}
-            for i in range(len(ressourcesToClame)):              
-                try: rTC[ressourcesToClame[i]["name"]]+=1 # On essaye d'ajouter 1 au compteur existant
-                except: rTC[ressourcesToClame[i]["name"]]=1 # Si on y arrive pas, on le créé                
+            for i in range(len(ressourcesToClame)-2):              
+                try:
+                    rTC[ressourcesToClame[i]["name"]]+=1 # On essaye d'ajouter 1 au compteur existant
+                except:
+                    rTC[ressourcesToClame[i]["name"]]=1 # Si on y arrive pas, on le créé                
                 if ressourcesToClame[i]["stock"]<rTC[ressourcesToClame[i]["name"]]: # Si il y a moins de stock que de ressources a collecter
                     ressourcesToClame.pop(i) # On le retire de la liste des ressources collectées
             
@@ -34,6 +36,7 @@ class Job:
             timeToAllBreak=0
             for ressource in ressourcesToClame:
                 timeToAllBreak+=ressource["timeToBreak"]*1-(self._speed/100)*1-(tool._speed/100)
+                tool.use(5, ressource["rarity"]) # Utilise l'outil, 5 d'xp et la rareté en dommage
 
             ### Affiche la barre de progression ###
             
@@ -74,7 +77,6 @@ class Job:
                             if place.ressources[k]["name"]==ressourcesToClame[j]["name"]:
                                 place.ressources[k]["stock"]-=1
 
-                        tool.use(5, ressourcesToClame[j]["rarity"]) # Utilise l'outil, 5 d'xp et la rareté en dommage
                         self.addXp(5) # On gagne 5 d'xp par ressources récupéré
                         timeStop+=ressourcesToClame[j]["timeToBreak"]/0.1 # On calcule le nouveau total de temps
                         j+=1 # O, change l'indice des ressources

@@ -17,7 +17,7 @@ class Personnage:
 
         namePlace, objPlace = random.choice(list(places.items())) # Récupère un lieu random
         self._place = (namePlace, objPlace) # Sauvegarde ce lieu sous forme de dictoinaire
-        self._inventaire={"iRessouces":{}, "iWeapons":[], "iArmors":[],"iSpells":[], "iTools":{"Punch":Tool("Punch", 1),"Axes":[Tool("Pioche en bois", 2),Tool("Pioche en pierre", 5),], "Pickaxes":[], "Swords":[], "Fishing Rods":[]}}
+        self._inventaire={"iRessouces":{}, "iWeapons":[], "iArmors":[],"iSpells":[], "iTools":{"Punch":Tool("Punch", 1),"Axes":[Tool("Pioche en bois", 2,5),Tool("Pioche en pierre", 5,5),], "Pickaxes":[], "Swords":[], "Fishing Rods":[]}}
         self.jobs={"Lumberjack":Job("Lumberjack"),
                 "Mineur":Job("Mineur"),
                 "Hunter":Job("Hunter"),
@@ -31,11 +31,12 @@ class Personnage:
              liste_classe.append(key)
 
         resKey = Interface.questionary.select( # Pose une question
-            "qu'elle classe choisissez vous ?",
+            "Quel classe choisissez vous ?",
             choices=list(map(str,liste_classe )) # Convertis mes objects en chaine de charactère
         ).ask()
         self.classe = resKey
-        
+
+
     def __str__(self):
         capacité = []
         for comp in self.ability:
@@ -52,8 +53,8 @@ class Personnage:
             # Demande quel outil choisir
             choicesTools=[str(self._inventaire["iTools"]["Punch"])] # On laisse toujours la possibilité d'utiliser le poing
             for tool in tools: # Pour chaque outils
-                if tool.durability<0:
-                    choicesTools.append(Interface.Choice(str(tool), disabled="Votre outil est classé"))
+                if tool.durability[0]<1:
+                    choicesTools.append(Interface.Choice(str(tool), disabled="Votre outil est cassé"))
                 else:
                     choicesTools.append(str(tool))
 
@@ -82,15 +83,34 @@ class Personnage:
         self._place=(resKey,places[resKey]) # Sauvegarde la nouvelle place ("nom", obj)
         Interface.print_formatted_text(Interface.HTML(f'Vous vennez de bouger vers : <b>{resKey}</b>'))
 
+
     def showInventaire(self):
         invRessources=""
         if self._inventaire["iRessouces"]:
             for key, value in self._inventaire["iRessouces"].items():
                 invRessources+=f"<i>{key}</i>: <orange>{value}</orange>\n"
-        else: invRessources="<red>Vous n'avez aucunes ressources pour le moment !</red>"
+        else: invRessources="<red>Vous n'avez aucunes ressources pour le moment !</red>\n"
 
         invTools=""
         for key, value in self._inventaire["iTools"].items():
-            invTools+=f"<i>{key}</i>: <orange>{str(value)}</orange>\n"
+            if key=="Punch":
+                invTools+=f"<orange>{value}</orange>\n"
+            else:
+                temp=""
+                for t in value:
+                    temp+=f"{str(t)}, "
+                invTools+=f"<i>{key}</i>: <orange>{str(temp)[:-2]}</orange>\n"
 
-        Interface.print_formatted_text(Interface.HTML(f'<b><green>--- Ressources ---</green></b>\n{invRessources}\n<b><green>--- Outils ---</green></b>\n{invTools}\n'))
+        Interface.print_formatted_text(Interface.HTML(f'<b><blue>------ Inventaire ------</blue>\n<green>--- Ressources ---</green></b>\n{invRessources}\n<b><green>--- Outils ---</green></b>\n{invTools}'))
+
+    def craft(self):
+        typeOfCraft = Interface.questionary.select( # Affiche les choix
+            "Que voulez vous craft ?",
+            choices=["Outils"]
+        ).ask()
+        if typeOfCraft=="Outils":
+            whatTool = Interface.questionary.select( # Affiche les choix
+                "Quel type d'outil voulez vous creer/réparer ?",
+                choices=["Axes", "Pickaxes", "Swords", "Fishing Rods"]
+            ).ask()
+

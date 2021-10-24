@@ -1,18 +1,19 @@
 from math import sqrt
+from Modules.Interface import decimalRom
 
 class Tool:
     def __init__(self,name, efficacite, durability=False,):
         self.name=name 
-        self.durability=durability
+        self.durability=[durability,durability] # Durabilité actuelle, durabilité max
         self.multiplier=efficacite
         self._speed=1
         self._looting=1
         self.experiance=[1,0,100] # Le niveau, l'xp, l'xp max pour lvl up
 
     def __str__(self):
-        chaine=f"{self.name}, niveau {self.experiance[0]}"
-        if self.durability!=False: # Si il a une durabilité
-            chaine+=f", durabilité: {self.durability}" # Alors on l'affiche
+        chaine=f"{self.name} {decimalRom(self.experiance[0])}"
+        if self.durability[1]!=False: # Si il a une durabilité
+            chaine+=f" ({self.durability[0]}/{self.durability[1]})" # Alors on l'affiche
         return chaine
 
     def _addXp(self,nbXp):
@@ -29,8 +30,9 @@ class Tool:
 
     def use(self,xp,damage): # Quand on uttilise l'outil, ça lui fait gagner des niveaux, et predre de la durabilité
         self._addXp(xp)
-        if self.durability: # Si durabilité n'est pas False
-            self.durability-=damage
-            if self.durability<0:
-                self.durability=0
-                print(f"Votre {self.name} s'est cassé")
+        if self.durability[1]!=False: # Si durabilité n'est pas False
+            if self.durability[0]>0: # Si l'outil n'est pas deja cassé
+                self.durability[0]-=damage
+                if self.durability[0]<1:
+                    self.durability[0]=0
+                    print(f"Votre {self.name} s'est cassé")
