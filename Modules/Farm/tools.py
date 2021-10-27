@@ -2,13 +2,14 @@ from math import sqrt
 from Modules.Interface import decimalRom
 
 class Tool:
-    def __init__(self,name, efficacite, durability=False,):
+    def __init__(self,name, efficacite, requirement=[], durability=False,):
         self.name=name 
         self.durability=[durability,durability] # Durabilité actuelle, durabilité max
         self.multiplier=efficacite
         self._speed=1
         self._looting=1
         self.experiance=[1,0,100] # Le niveau, l'xp, l'xp max pour lvl up
+        self.requirement=requirement
 
     def __str__(self):
         chaine=f"{self.name} {decimalRom(self.experiance[0])}"

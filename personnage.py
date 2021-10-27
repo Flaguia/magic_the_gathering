@@ -17,12 +17,19 @@ class Personnage:
 
         namePlace, objPlace = random.choice(list(places.items())) # Récupère un lieu random
         self._place = (namePlace, objPlace) # Sauvegarde ce lieu sous forme de dictoinaire
-        self._inventaire={"iRessouces":{}, "iWeapons":[], "iArmors":[],"iSpells":[], "iTools":{"Punch":Tool("Punch", 1),"Axes":[Tool("Pioche en bois", 2,5),Tool("Pioche en pierre", 5,5),], "Pickaxes":[], "Swords":[], "Fishing Rods":[]}}
+        self._inventaire={"iRessouces":{}, "iWeapons":[], "iArmors":[],"iSpells":[], "iTools":{"Punch":Tool("Punch", 1),"Axes":[Tool("Hache en bois", 2, [(30,"Bois")],200),Tool("Hache en pierre", 5,[(20,"Bois"), (10,"Pierre")],500)], "Pickaxes":[], "Swords":[], "Fishing Rods":[]}}
         self.jobs={"Lumberjack":Job("Lumberjack"),
                 "Mineur":Job("Mineur"),
                 "Hunter":Job("Hunter"),
                 "Fisherman":Job("Fisherman")
         }
+
+
+    def __str__(self):
+        capacité = []
+        for comp in self.ability:
+            capacité.append(comp.name)
+        return f'{self.nom}, classe: {self.classe}, vie: {self.vie}, attaque: {self.attaque}, dégat magique: {self.magie}, mana: {self.mana}, vitesse: {self.vitesse}, liste des compétences: {capacité}'
 
 
     def class_choice(self):
@@ -37,13 +44,6 @@ class Personnage:
         self.classe = resKey
 
 
-    def __str__(self):
-        capacité = []
-        for comp in self.ability:
-            capacité.append(comp.name)
-        return f'{self.nom}, classe: {self.classe}, vie: {self.vie}, attaque: {self.attaque}, dégat magique: {self.magie}, mana: {self.mana}, vitesse: {self.vitesse}, liste des compétences: {capacité}'
-
-
     def work(self):
         #TODO Fix le bug de l'xp de l'outil
         job=self.jobs[self._place[1].job]
@@ -54,7 +54,7 @@ class Personnage:
             choicesTools=[str(self._inventaire["iTools"]["Punch"])] # On laisse toujours la possibilité d'utiliser le poing
             for tool in tools: # Pour chaque outils
                 if tool.durability[0]<1:
-                    choicesTools.append(Interface.Choice(str(tool), disabled="Votre outil est cassé"))
+                    choicesTools.append(Interface.questionary.Choice(str(tool), disabled="Votre outil est cassé"))
                 else:
                     choicesTools.append(str(tool))
 
@@ -98,10 +98,23 @@ class Personnage:
             else:
                 temp=""
                 for t in value:
-                    temp+=f"{str(t)}, "
-                invTools+=f"<i>{key}</i>: <orange>{str(temp)[:-2]}</orange>\n"
+                    if t.durability[0]<1:
+                        temp+=f"<red><i>{str(t)}</i></red>, "
+                    else:
+                        temp+=f"<orange>{str(t)}</orange>, "
+                invTools+=f"<i>{key}</i>: {str(temp)[:-2]}\n"
 
         Interface.print_formatted_text(Interface.HTML(f'<b><blue>------ Inventaire ------</blue>\n<green>--- Ressources ---</green></b>\n{invRessources}\n<b><green>--- Outils ---</green></b>\n{invTools}'))
+
+    def _bolRessources(self, liste): # [(20,"Bois"),(20,"Fer")]
+        for element in liste:
+            try: # On essaye de voir si le nombre de stock est superieur
+                if self._inventaire["iRessouces"][element[1]]<element[0]:
+                    return False
+            except: # On a même pas trouvé la ressource dans les stocks
+                return False
+        return True
+
 
     def craft(self):
         typeOfCraft = Interface.questionary.select( # Affiche les choix
@@ -111,6 +124,22 @@ class Personnage:
         if typeOfCraft=="Outils":
             whatTool = Interface.questionary.select( # Affiche les choix
                 "Quel type d'outil voulez vous creer/réparer ?",
-                choices=["Axes", "Pickaxes", "Swords", "Fishing Rods"]
+                choices=["Hache", "Pioche", "Epee", "Canne à pêche"]
             ).ask()
+            if whatTool=="Hache":
+                listOfTools=["Hache en Bois (30 bois)", "Hache en pierre (20 bois, 10 pierre)","Hache en fer (20 bois, 10 fer)", "Hache en or (20 bois, 10 fer)", "Hache en Diamants (20 bois, 10 fer)"]
+                choix=["Ne rien faire"]
+                for tool in self._inventaire["iTools"]["Axes"]:
+                    if tool.durability[0]!=tool.durability[1]: # Test si outil usé
+                        requirement=str(tool.requirement[-1][0]//2)+" "+tool.requirement[-1][1]
+                        stringName=f"Réparer {tool.name} ({requirement})"                        
+                        if not self._bolRessources([(tool.requirement[-1][0]//2,tool.requirement[-1][1])]): # Test si assez de ressources
+                            choix.append(Interface.questionary.Choice(stringName, disabled="Vous n'avez pas assez de ressources"))
+                        else:
+                            choix.append(stringName)
+
+                typeOfTool = Interface.questionary.select( # Affiche les choix
+                "Quel Hache veut-tu réparer/crafter ?",
+                    choices=choix
+                ).ask()
 

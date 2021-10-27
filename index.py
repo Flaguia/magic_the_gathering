@@ -1,9 +1,18 @@
 from personnage import Personnage
-from Modules import mob, combatJoueur, spell
+from Modules import mob, combatJoueur, spell, Interface
+
 
 perso=Personnage("a", ability=[spell.coup_bas, spell.sort_trop_chere])
-perso.craft()
-#perso.work()
-#perso.showInventaire()
-#combatJoueur(perso,mob.humain)
 
+#combatJoueur(perso,mob.humain)
+while True:
+    action = Interface.questionary.select( # Affiche les choix
+    "Que veut-tu faire ?",
+        choices=[
+            "craft",
+            "moove",
+            "work",
+            "showInventaire"
+        ]
+    ).ask()
+    eval("perso."+action+"()")

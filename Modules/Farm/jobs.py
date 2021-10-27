@@ -10,6 +10,7 @@ class Job:
         self._experiance=[1,0,100] # Le niveau, l'xp, l'xp max pour lvl up
         self._speed=1
         self._looting=1
+        self.craftRequirement=[]
         
     def work(self,tool, place):
         collectedRessources={} # Un dictionnaire des ressources collectées: {"cobble":3,"wood":10,...}
