@@ -11,7 +11,7 @@ class Personnage:
         self.vie = 100
         self.attaque = 15
         self.magie = 40
-        self.mana = 400
+        self.pa = 10 #point d'action permettant d'utiliser des comptétence ou d'attaquer avec son arme 
         self.vitesse = 30
         self.ability = ability
 
@@ -31,10 +31,11 @@ class Personnage:
             capacité.append(comp.name)
         return f'{self.nom}, classe: {self.classe}, vie: {self.vie}, attaque: {self.attaque}, dégat magique: {self.magie}, mana: {self.mana}, vitesse: {self.vitesse}, liste des compétences: {capacité}'
 
-
-    def class_choice(self):
+    def returnPlace(self):
+        return self._place[1]
+    def class_choice(self): #La fonction permettant de déterminer la classe de notre personnage
         liste_classe = []
-        for key in classe_Joueur.classe_choice:
+        for key in classe_Joueur.classe_choice: #on récupère les classes existences
              liste_classe.append(key)
 
         resKey = Interface.questionary.select( # Pose une question

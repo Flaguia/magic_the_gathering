@@ -17,12 +17,20 @@ humain = Mob("humain", "lumière", 100, 2, 0, 50, 15, [])
 ange = Mob("ange", "lumière", 150, 15, 25, 100, 30, [])
 squelette = Mob("squelette", "ténebre", 100, 15, 10, 30, 10, [])
 zombie = Mob("zombie", "ténebre", 120, 20 ,0, 0, 10, [])
-esprit = Mob("esprit", "eau", 50, 30, 50, 100, [])
+esprit = Mob("esprit", "eau", 50, 30, 50, 100,10 , [])
 Loutre_géante = Mob("Loutre Géante", "eau", 100, 75, 0, 0, 75, [])
 blood_elf = Mob("elfe de sang", "plante", 50, 25, 100, 70, 70, [])
 loup = Mob("loup", "plante", 100, 50, 0, 0, 50, [])
 gobelin = Mob("gobelin", "feu", 25, 70, 0, 0, 100, [])
 nain = Mob("nain", "feu", 50, 25, 30, 0, 20, [])
+
+mobPlain = [humain, ange]
+mobSwamp = [squelette, zombie, esprit]
+mobMountain = [gobelin, nain]
+mobForest = [blood_elf, loup]
+mobRiver = [esprit, Loutre_géante]
+mobDesert = [squelette]
+
 
 
 	

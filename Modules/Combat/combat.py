@@ -32,15 +32,15 @@ def combatJoueur(joueur,mob):
         etat_précédent= {}
         liste_action = [joueur.arme]            #on selectionne toutes les actions pouvant êtres    entreprise 
         action_affichage = [joueur.arme.name]
-        not_enough_mana = []
+        not_enough_pa = []
         for compétence in joueur.ability:
-            if compétence.mana > joueur.mana:
-                not_enough_mana.append(compétence)
+            if compétence.pa > joueur.pa:
+                not_enough_pa.append(compétence)
             else:
                 liste_action.append(compétence)
                 action_affichage.append(compétence.name)
 
-        for spell_trop_couteux in not_enough_mana:
+        for spell_trop_couteux in not_enough_pa:
             action_affichage.append(Interface.Choice(spell_trop_couteux.name, disabled= "sort trop couteux"))
 
         resKey = Interface.questionary.select( # Pose une question
